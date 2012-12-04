@@ -148,10 +148,20 @@ module AssetSync
             :content_encoding => 'gzip'
           })
         end
+
+        add_custom_headers(file)
+
         log "Uploading: #{f}"
       end
 
-      file = bucket.files.create( file ) unless ignore
+      bucket.files.create(file) unless ignore
+    end
+
+    def add_custom_headers(file)
+      headers = config.custom_headers.select { |(key, _)| file[:key] =~ key }
+      return unless headers
+
+      headers.values.each { |h| file.merge! h }
     end
 
     def upload_files

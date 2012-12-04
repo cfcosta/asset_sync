@@ -11,6 +11,7 @@ module AssetSync
     attr_accessor :fail_silently
     attr_accessor :always_upload
     attr_accessor :ignored_files
+    attr_accessor :custom_headers
     attr_accessor :prefix
     attr_accessor :public_path
     attr_accessor :enabled
@@ -49,6 +50,7 @@ module AssetSync
       self.fail_silently = false
       self.always_upload = []
       self.ignored_files = []
+      self.custom_headers = {}
       self.enabled = true
       load_yml! if defined?(Rails) && yml_exists?
     end
