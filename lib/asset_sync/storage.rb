@@ -154,14 +154,17 @@ module AssetSync
         log "Uploading: #{f}"
       end
 
-      bucket.files.create(file) unless ignore
+      unless ignore
+        file_object = bucket.files.new(file)
+        file_object.save(custom_headers(file))
+      end
     end
 
-    def add_custom_headers(file)
+    def custom_headers(file)
       headers = config.custom_headers.select { |(key, _)| file[:key] =~ key }
       return unless headers
 
-      headers.values.each { |h| file.merge! h }
+      headers.values.inject({}) {|hsh,v| hsh.merge!(v); hsh }
     end
 
     def upload_files
